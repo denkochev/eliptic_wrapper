@@ -15,19 +15,23 @@ type ElipticPoint struct {
 	Y *big.Int
 }
 
+// check if point is on secp256k1 curve
+func (point *ElipticPoint) IsOnCurveCheck() bool {
+	return btcec.S256().IsOnCurve(point.X, point.Y)
+}
+
+// print point coordinates
+func (point *ElipticPoint) PrintPoint() {
+	fmt.Printf("X - %x\n", point.X)
+	fmt.Printf("Y - %x\n", point.Y)
+}
+
 // function to get basic point for secp256k1 function
 func GetBasicG() (point ElipticPoint) {
 	var G = ElipticPoint{}
 	G.X = btcec.S256().Gx
 	G.Y = btcec.S256().Gy
 	return G
-}
-
-// function to Print G coordinates
-func PrintBasicG() {
-	G := GetBasicG()
-	fmt.Printf("Base point (Gx) on secp256k1: %x\n", G.X)
-	fmt.Printf("Base point (Gy) on secp256k1: %x\n", G.Y)
 }
 
 // set new point
@@ -62,17 +66,6 @@ func GetRandomECpoint() (ElipticPoint, error) {
 	return point, nil
 }
 
-// check if point is on secp256k1 curve
-func (point *ElipticPoint) IsOnCurveCheck() bool {
-	return btcec.S256().IsOnCurve(point.X, point.Y)
-}
-
-// print point coordinates
-func (point *ElipticPoint) PrintPoint() {
-	fmt.Printf("X - %x\n", point.X)
-	fmt.Printf("Y - %x\n", point.Y)
-}
-
 // point A + point B = Point C
 func AddElipticPoints(a, b ElipticPoint) ElipticPoint {
 	resultPoint := ElipticPoint{}
@@ -89,14 +82,12 @@ func Double(point ElipticPoint) ElipticPoint {
 	return doubled
 }
 
-// func ECPointGen(x, y *big.Int) (point ECPoint)    {} //ECPoint creation +
-// func IsOnCurveCheck(a ECPoint) (c bool)           {} //DOES P ∈ CURVE? +
-// func AddECPoints(a, b ECPoint) (c ECPoint)        {} //P + Q | +
-// func DoubleECPoints(a ECPoint) (c ECPoint)        {} //2P
-// func ScalarMult(k big.Int, a ECPoint) (c ECPoint) {} //k * P
-// func ECPointToString(point ECPoint) (s string)    {} //Serialize point
-// func StringToECPoint(s string) (point ECPoint)    {} //Deserialize point
-// func PrintECPoint(point ECPoint)                  {} //Print point
+// scalar multiply k * P
+func ScalarMult(point ElipticPoint, k *big.Int) ElipticPoint {
+	result := ElipticPoint{}
+	result.X, result.Y = btcec.S256().ScalarMult(point.X, point.Y, k.Bytes())
+	return result
+}
 
 /*
 helpers
