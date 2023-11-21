@@ -60,5 +60,5 @@ All code is documenteted and available in `./wrapper/eliptic_wrapper.go`
 
 ## Test
 
-Wrapper was tested on basic Group rules, which elliptic curve has to match. **wrapper/hypothesis_test.go**  
+Wrapper was tested on basic Group rules, which elliptic curve has to match. **k*(d*G) = d*(k*G)**  
 Code for the test is in `./wrapper/hypothesis_test.go` file.
